@@ -7,6 +7,16 @@ spring:
     nacos:
       discovery:
         server-addr: 8.137.39.241:8847
+# rabbitmq
+  rabbitmq:
+    host: 8.137.39.241 #主机名
+    port: 5672 #端口
+    virtual-host: test #虚拟主机块
+    username: xsj #用户名
+    password: Root123456 #密码
+    listener:
+      simple:
+        prefetch: 1 #每次只能获取一条消息 处理完在获取下一条
 
 
 
