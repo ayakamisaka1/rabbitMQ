@@ -1,0 +1,12 @@
+server:
+  port: 9200
+spring:
+  application:
+    name: ayaka-rabbitMq
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 8.137.39.241:8847
+
+
+

@@ -1,0 +1,10 @@
+#docker 启动rabbitMQ
+#启动mq的时候把mq加到nacos网络中  防止发现不了服务
+docker run -d  \
+--network=nacos-cluster --restart=always \
+--hostname rabbit \
+--name rabbit \
+-p 15672:15672 -p 5672:5672 \
+-e RABBITMQ_DEFAULT_USER=rabbit \
+-e RABBITMQ_DEFAULT_PASS=Root123456 \
+-e RABBITMQ_DEFAULT_VHOST=rabbit  rabbitmq:management
