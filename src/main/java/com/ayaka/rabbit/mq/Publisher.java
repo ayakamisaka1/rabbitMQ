@@ -3,6 +3,9 @@ package com.ayaka.rabbit.mq;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
 public class Publisher {
 
@@ -50,10 +53,12 @@ public class Publisher {
      * @param s
      */
     public void sendMessageQueueTopic(String s){
-        String exchangeName = "xsj.amq.topic";
-        String message = "hello rabbitMq"+s;
+        String exchangeName = "test.xsj.topic";
+        String message = "hello rabbitMq topic";
+        Map<String,Object> map = new HashMap();
+        map.put("xsj",message);
         //routingKey = yx.#时：xsj.amq.topic交换机将消息发到yx.开头的队列里
         //routingKey = #.mihoyo时：xsj.amq.topic交换机将消息发到以.mihoyo结尾的队列里
-        rabbitTemplate.convertAndSend(exchangeName,"yx.mihoyo",message);
+        rabbitTemplate.convertAndSend(exchangeName,"test.#",map);
     }
 }
