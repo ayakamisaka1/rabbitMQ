@@ -31,4 +31,9 @@ public class RabbitMqAPI {
     public void sendMessageQueueTopic(){
         publisher.sendMessageQueueTopic("1");
     }
+
+    @GetMapping("/rabbitMq/sendMessageReturn")
+    public void sendMessageReturn(){
+        publisher.sendMessageReturn();
+    }
 }

@@ -1,12 +1,16 @@
 package com.ayaka.rabbit.mq;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@Slf4j
 public class Publisher {
 
     private RabbitTemplate rabbitTemplate;
@@ -60,5 +64,30 @@ public class Publisher {
         //routingKey = yx.#时：xsj.amq.topic交换机将消息发到yx.开头的队列里
         //routingKey = #.mihoyo时：xsj.amq.topic交换机将消息发到以.mihoyo结尾的队列里
         rabbitTemplate.convertAndSend(exchangeName,"test.#",map);
+    }
+
+    public void sendMessageReturn(){
+        //创建对象  里面有一个ID 代码消息唯一性
+        CorrelationData cd = new CorrelationData();
+        cd.getFuture().addCallback(new ListenableFutureCallback<CorrelationData.Confirm>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                //发送信息异常 基本不触发
+                log.error("RabbitMq发送信息失败",throwable);
+            }
+
+            @Override
+            public void onSuccess(CorrelationData.Confirm confirm) {
+                //收到mq异步通知的消息发送结果
+                if (confirm.isAck()){ //ack发送成功 nack发送失败
+                    //发送成功
+                    log.info("ACK----RabbitMq发送信息成功");
+                }else{
+                    //发送失败
+                    log.error("NACK----RabbitMq发送信息失败,说明：{}",confirm.getReason());
+                }
+            }
+        });
+        rabbitTemplate.convertAndSend("test.xsj.topic","test.#","map",cd);
     }
 }

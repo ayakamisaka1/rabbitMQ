@@ -6,17 +6,26 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 8.137.39.241:8847
-# rabbitmq
+        server-addr: 8.137.39.241:8847,8.137.39.241:8848,8.137.39.241:8849 #nacos地址
+  # rabbitmq
   rabbitmq:
-    host: 8.137.39.241 #������
-    port: 5672 #�˿�
-    virtual-host: test #����������
-    username: xsj #�û���
-    password: Root123456 #����
+    host: 8.137.39.241
+    port: 5672
+    virtual-host: test #mq虚拟机
+    username: xsj
+    password: Root123456
+    connection-timeout: 1s #连接超时时间
+    template:
+      retry:
+        enabled: true #重连开启
+        initial-interval: 1000ms #重试间隔时间
+        multiplier: 3 #上次重试时间倍数
+        max-attempts: 3 #最大重连次数
     listener:
       simple:
-        prefetch: 1 #ÿ��ֻ�ܻ�ȡһ����Ϣ �������ڻ�ȡ��һ��
-
-
-
+        prefetch: 1
+#confirm消息发送确定 三种模式  none：关闭此功能
+#simple：同步等待mq确认消息是否发送成功
+#correlated：异步回调方式通知消息是否发送成功
+    publisher-confirm-type: correlated
+    publisher-returns: true
