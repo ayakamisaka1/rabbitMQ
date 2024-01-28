@@ -24,6 +24,7 @@ spring:
     listener:
       simple:
         prefetch: 1
+        acknowledge-mode: auto #消费者自动检测消费是否成功 消费成功给mq返回ack  失败nack 
 #confirm消息发送确定 三种模式  none：关闭此功能
 #simple：同步等待mq确认消息是否发送成功
 #correlated：异步回调方式通知消息是否发送成功

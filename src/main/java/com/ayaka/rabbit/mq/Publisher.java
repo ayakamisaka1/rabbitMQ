@@ -1,11 +1,14 @@
 package com.ayaka.rabbit.mq;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,8 +47,9 @@ public class Publisher {
      * @param s
      */
     public void sendMessageQueueDirect(String s){
+        Message message = MessageBuilder.withBody(s.getBytes(StandardCharsets.UTF_8)).build();
         String exchangeName = "xsj.amq.direct";
-        String message = "hello rabbitMq"+s;
+        //String message = "hello rabbitMq"+s;
         //routingKey = 1时：xsj.amq.direct交换机将消息推到路由规则为1的消息队列里
         //routingKey = 2时：xsj.amq.direct交换机将消息推到路由规则为2的消息队列里
         //routingKey = 3时：xsj.amq.direct交换机将消息推到路由规则为3的消息队列里

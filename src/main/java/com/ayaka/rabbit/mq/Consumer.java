@@ -3,10 +3,7 @@ package com.ayaka.rabbit.mq;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.ExchangeTypes;
-import org.springframework.amqp.rabbit.annotation.Exchange;
-import org.springframework.amqp.rabbit.annotation.Queue;
-import org.springframework.amqp.rabbit.annotation.QueueBinding;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.annotation.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -37,12 +34,12 @@ public class Consumer {
     }
 
     /**
-     * 注解形式去创建队列与交换机
+     * 注解形式去创建队列与交换机 队列为惰性队列 数据直接写入内存 防止数据丢失
      * @param msg
      */
     @RabbitListener(bindings = @QueueBinding(value = @Queue(name = "test.xsj.topic.queue"),
             exchange = @Exchange(name = "test.xsj.topic", type = ExchangeTypes.TOPIC),
-            key = {"test.#"}))
+            key = {"test.#"},arguments=@Argument(name="x-queue-mode",value = "lazy")))
     public void listenQueue(Map<String, Object> msg) {
         log.info("收到消息");
         Set<Map.Entry<String, Object>> entries = msg.entrySet();

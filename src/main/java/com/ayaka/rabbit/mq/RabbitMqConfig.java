@@ -23,6 +23,8 @@ public class RabbitMqConfig implements ApplicationContextAware {
     //序列化
     @Bean
     public MessageConverter messageConverter() {
+        Jackson2JsonMessageConverter jsonMessageConverter = new Jackson2JsonMessageConverter();
+        jsonMessageConverter.setCreateMessageIds(true);//设置消息自带id
         return new Jackson2JsonMessageConverter();
     }
 
